@@ -6,15 +6,20 @@ const BLOCKCHAIN_URL = 'https://blockchain.info/ticker';
 const CURRENCY_BITCOIN = 'BTC';
 
 const isAnyBTC = (from, to) => [from, to].includes(CURRENCY_BITCOIN);
+/*
+  returns true if from or to is 'BTC' */
 
 module.exports = async opts => {
   const {amount = 1, from = 'USD', to = CURRENCY_BITCOIN} = opts;
+  /* 
+    These are the default parameters : 1USD to BTC, but they can be changed by hand when calling the function with node*/
+
   const promises = [];
   let base = from;
 
   const anyBTC = isAnyBTC(from, to);
 
-  if (anyBTC) {
+  if (anyBTC) { /* if from=BTC or to=BTC*/
     base = from === CURRENCY_BITCOIN ? to : from;
     promises.push(axios(BLOCKCHAIN_URL));
   }
@@ -51,9 +56,10 @@ module.exports = async opts => {
     }
 
     return money.convert(amount, conversionOpts);
+    /* Converts the money to return it back*/
   } catch (error) {
     throw new Error (
-      '💵 Please specify a valid `from` and/or `to` currency value!'
+      'Please specify a valid `from` and/or `to` currency value!'
     );
   }
 };
